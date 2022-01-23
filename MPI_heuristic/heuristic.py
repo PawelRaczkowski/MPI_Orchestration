@@ -19,6 +19,15 @@ class Algorithm():
         self.distances_user_servers=[]
         self.content_on_server=[]
 
+        self.use_server=[]
+        
+        for i in range(self.no_users):
+            self.use_server.append([])
+            for j in range(self.no_contents):
+                self.use_server[i].append([])
+                for k in range(self.no_servers):
+                    self.use_server[i,j].append(False)
+
         for i in range(self.no_servers):
             x1=self.servers_locations[i].get_x()
             y1=self.servers_locations[i].get_y()
@@ -83,9 +92,35 @@ class Algorithm():
     def calculate_distance(self,x1,x2,y1,y2):
         return sqrt(pow(x1-x2,2)+pow(y1-y2,2))
 
-    def calculate_cost(self):
-        # obliczanie  kosztu
-        pass
+    def calculate_allocation_cost(self):
+        cost=0
+        for i in range(self.no_servers):
+            for j in range(self.no_contents):
+                if self.content_on_server[i,j]:
+                    cost+=self.distances_orch_servers[i]*self.content_sizes[j]
+        return cost
+    def calculate_users_cost(self):
+        cost=0
+        for i in range(self.no_servers):
+            for j in range(self.no_contents):
+                for u in range(self.no_users):
+                    if self.use_server[u,j,i]:
+                        cost+=5.0
+        return cost
+    def calculate_load_cost(self):
+        cost=0
+        for i in range(self.no_servers):
+            for j in range(self.no_contents):
+                for u in range(self.no_users):
+                    if self.use_server[u,j,i]:
+                        cost+=self.content_sizes[j]*self.distances_user_servers[u,i]
+        return cost
+
+    def calculate_total_cost(self):
+        C_allocation=self.calculate_allocation_cost()
+        C_users=self.calculate_users_cost()
+        C_load_server=self.calculate_load_cost()
+        return C_allocation+C_users+C_load_server
 
     def content_distribution(self):
         # tutaj będzie algorytm ewolucyjny
