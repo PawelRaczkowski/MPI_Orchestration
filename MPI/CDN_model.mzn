@@ -50,9 +50,7 @@ constraint
   sum(i in SERVERS,j in CONTENTS)(bool2int(use_server[u,j,i])) == sum(i in CONTENTS)(bool2int(matrix_interest[u,i])));
 
 constraint
-  forall(i in SERVERS) (
-  sum(j in CONTENTS)(content_on_server[j,i]) == sum(u in USERS, j in CONTENTS)(use_server[u,j,i])
-  );
+  sum(i in SERVERS,j in CONTENTS)(bool2int(content_on_server[j,i])) == sum(i in SERVERS, u in USERS, j in CONTENTS)(bool2int(use_server[u,j,i]));
    
   
 % rozwiąż- funkcja celu
