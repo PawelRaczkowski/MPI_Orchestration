@@ -1,10 +1,10 @@
 no_servers=3;
 no_users=3;
 no_contents=5;
-capacity=[5,6,8];
+capacity=[10,16,18];
 x_server=[2,12,6];
 y_server=[3,8,10];
-content_size=[4,6,2,3,1];
+content_size=[4,3,2,3,1];
 x_user=[1,0,2];
 y_user=[2,-1,-2];
 matrix_interest=[|true,false,false,true,false

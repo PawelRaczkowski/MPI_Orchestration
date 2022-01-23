@@ -33,10 +33,6 @@ array[int,int] of float: distances_user_server=array2d(USERS,SERVERS, [calculate
 
 
 % zmienne decyzyjne
-array[CONTENTS,SERVERS] of var int: C_allocation;
-array[USERS] of var int: C_users;
-array[SERVERS] of var int: C_load_server;
-
 
 array[CONTENTS, SERVERS] of var bool: content_on_server;
 array[USERS,CONTENTS,SERVERS] of var bool: use_server;
@@ -52,7 +48,12 @@ sum(i in SERVERS, j in CONTENTS)(content_on_server[j,i]) >0;
 constraint
   forall(u in USERS) (
   sum(i in SERVERS,j in CONTENTS)(bool2int(use_server[u,j,i])) == sum(i in CONTENTS)(bool2int(matrix_interest[u,i])));
- 
+
+constraint
+  forall(i in SERVERS) (
+  sum(j in CONTENTS)(content_on_server[j,i]) == sum(u in USERS, j in CONTENTS)(use_server[u,j,i])
+  );
+   
   
 % rozwiąż- funkcja celu
 solve minimize cost();
