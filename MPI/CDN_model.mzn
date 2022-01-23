@@ -58,4 +58,4 @@ constraint
 % rozwiąż- funkcja celu
 solve minimize cost();
 
-output [ "Użycie serwerów(user,type_content,server)=", show(use_server),"\n", "Jakie treści na jakim serwerze(type_content,server)=",show(content_on_server),"\n"];
+output [ "Contents on server: \(s) = \(content_on_server[CONTENTS, s]);\n" | s in SERVERS ]
