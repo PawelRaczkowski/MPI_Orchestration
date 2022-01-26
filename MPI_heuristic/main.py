@@ -1,6 +1,6 @@
 import sys
 from heuristic import Algorithm
-from solution import Solution
+from Candidate import Candidate
 def main():
     no_arguments=len(sys.argv)
 
@@ -8,9 +8,8 @@ def main():
         print('Proper execution: python script <file_configuration.txt>')
     else:
         conf_file=sys.argv[1]
-        initial_solution=Solution(conf_file)
+        initial_solution=Candidate(conf_file)
         algorithm=Algorithm(initial_solution)
-
         algorithm.run()
 
 if __name__=="__main__":

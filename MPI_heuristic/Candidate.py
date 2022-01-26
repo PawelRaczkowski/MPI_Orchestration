@@ -1,7 +1,9 @@
 from cmath import sqrt
+import copy
+from xmlrpc.client import MAXINT
 
 from location import Location
-class Solution():
+class Candidate():
     def __init__(self,conf_file) -> None:
         self.no_servers=0
         self.no_users=0
@@ -13,14 +15,17 @@ class Solution():
 
         self.capacities=[]
         self.matrix_interest=[]
-        self.parse_file(conf_file)
+        if conf_file != "":
+            self.parse_file(conf_file)
         
         self.distances_orch_servers=[]
         self.distances_user_servers=[]
-        self.content_on_server=[]
 
+        self.content_on_server=[]
         self.use_server=[]
-        
+
+        self.total_cost=MAXINT # cost of solution
+
         for i in range(self.no_users):
             self.use_server.append([])
             for j in range(self.no_contents):
@@ -43,10 +48,11 @@ class Solution():
             for j in range(self.no_contents):
                 self.content_on_server[i].append(False)
         
-        
 
 
-
+    def assign_solution(self, content_on_server, use_server):
+        self.content_on_server=copy.deepcopy(content_on_server)
+        self.use_server=copy.deepcopy(use_server)
 
     def parse_file(self,conf_file):
         f=open(conf_file, "r")
@@ -120,7 +126,7 @@ class Solution():
         C_allocation=self.calculate_allocation_cost()
         C_users=self.calculate_users_cost()
         C_load_server=self.calculate_load_cost()
-        return C_allocation+C_users+C_load_server
+        self.total_cost=C_allocation+C_users+C_load_server
 
 
     def display_results(self):
