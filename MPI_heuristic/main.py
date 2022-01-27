@@ -13,4 +13,9 @@ def main():
         algorithm.run()
 
 if __name__=="__main__":
-    main()
+    list1=[3,5,7]
+    value=list1[1]
+    list1[1]=list1[2]
+    list1[2]=value
+
+    #main()

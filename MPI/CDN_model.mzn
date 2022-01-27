@@ -46,14 +46,13 @@ constraint
 constraint %żeby nie zwracało samych 0
 sum(i in SERVERS, j in CONTENTS)(content_on_server[j,i]) >0;
 constraint
-  forall(u in USERS) (
-  sum(i in SERVERS,j in CONTENTS)(bool2int(use_server[u,j,i])) == sum(i in CONTENTS)(bool2int(matrix_interest[u,i])));
+  forall(u in USERS, j in CONTENTS) (
+  sum(i in SERVERS)(bool2int(use_server[u,j,i])) == bool2int(matrix_interest[u,j]));
 
 constraint
-forall(i in SERVERS) (
-  sum(j in CONTENTS)(bool2int(content_on_server[j,i])) == sum( u in USERS, j in CONTENTS)(bool2int(use_server[u,j,i])));
+forall(j in CONTENTS) ( %jeżeli jest zainteresowanie na daną treść to jakiś serwer musi to świadczyć, jeżeli nie ma to żaden nie świadczy
+if sum(u in USERS)(bool2int(matrix_interest[u,j])) >0 then sum(i in SERVERS)(bool2int(content_on_server[j,i])) >= 1 else sum(i in SERVERS)(bool2int(content_on_server[j,i]))==0 endif);
    
-  
 % rozwiąż- funkcja celu
 solve minimize cost();
 
