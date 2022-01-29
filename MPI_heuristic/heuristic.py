@@ -8,7 +8,7 @@ import copy
 
 class Algorithm():
     LIMIT_GENERATIONS=100
-    LIMIT_TIME=60 # in seconds
+    LIMIT_TIME=10 # in seconds
     LIMIT_LACK_BETTER_SOLUTION=20
 
     def __init__(self,init_solution,end_condition,p_cross,p_mutation,no_candidates,starting_population) -> None:
@@ -21,8 +21,8 @@ class Algorithm():
         self.no_candidates=no_candidates #liczba kandydatów na każdą generacje
         self.starting_population=starting_population
         self.candidates=self.generate_candidates()# generacja początkowej generacji
-        print("STARTING POPULATION: ")
-        self.display_candidates()     
+
+     
 
         self.time_of_execution=0
         self.no_generations=0
@@ -30,11 +30,20 @@ class Algorithm():
 
     def run(self):
         start=time.time()
+        #print("STARTOWA POPULACJA.... ")
+        #self.display_candidates()
         while self.check_end_condition():
+            #print("MUTATION...")
             self.mutate()
+            #print("CROSSING...")
             self.cross()
+            #print("FILTERING BEST CANDIDATES...")
             self.get_best_candidates()
+            #print("****** DISPLAY OF CANDIDATES ******")
+            #self.display_candidates()
+            #print("CHECKING NEW SOLUTION...")
             self.check_new_solution()
+
             self.time_of_execution=time.time()-start
 
     def display_candidates(self):
@@ -42,55 +51,65 @@ class Algorithm():
             cand.display_results(self.initial_solution)
 
     def mutate(self):
-        for k in range(len(self.candidates)):
+        k=0
+        max_k=len(self.candidates)-1
+        while k != max_k: 
+            candidate=copy.deepcopy(self.candidates[k])
             for i in range(self.initial_solution.no_servers):
                 if random.uniform(0,1) < self.probability_mutation:
-                    candidate=copy.deepcopy(self.candidates[k])
+                    if_mutation=True
                     index_one=randrange(self.initial_solution.no_contents)
                     index_two=index_one
                     while index_two == index_one:
                         index_two=randrange(self.initial_solution.no_contents)
-                    candidate.content_on_server[i][index_one]= not self.candidates[k].content_on_server[i][index_one]
-                    candidate.content_on_server[i][index_two]= not self.candidates[k].content_on_server[i][index_two]
+                    temp=candidate.content_on_server[i][index_one]
+                    candidate.content_on_server[i][index_one]= candidate.content_on_server[i][index_two]
+                    candidate.content_on_server[i][index_two]= temp
                     
-                    candidate.assign_content_to_user(self.initial_solution)
-                    candidate.calculate_total_cost(self.initial_solution)
-                    if self.check_limits(candidate,self.initial_solution):
-                        self.candidates.append(candidate)
-                    else:
-                        i-=1
+            candidate.assign_content_to_user(self.initial_solution)
+            candidate.calculate_total_cost(self.initial_solution)
+            if self.check_limits(candidate,self.initial_solution):
+                #print("Generated candidate after mutation....")
+                #candidate.display_results(self.initial_solution)
+                self.candidates.append(candidate)
+            k+=1
 
 
 
 
     def check_limits(self,candidate,initial_solution): # sprawdza czy nie przeciążony każdy z serwerów
-        sum_overload=0
+        
         for i in range(initial_solution.no_servers):
+            sum_overload=0
             for j in range(initial_solution.no_contents):
                 if candidate.content_on_server[i][j]:
                     sum_overload+=initial_solution.content_sizes[j]
-        if sum_overload > self.initial_solution.capacities[i]:
-            return False
+            if sum_overload > self.initial_solution.capacities[i]:
+                #print("too much...")
+                return False
         return True
 
     def cross(self):
         self.shuffle()
         no_results=len(self.candidates)//2
-        for i in range(no_results):
+        i=0
+        while i != no_results:
             if(random.uniform(0,1) <self.probability_cross):
                 candidate=self.cross_genes(self.candidates[2*i],self.candidates[2*i+1])
                 if self.check_limits(candidate,self.initial_solution): #nie można przekroczyć pojemności serwerów
+                    i+=1
+                    #print("Generated candidate after crossing....")
+                    #candidate.display_results(self.initial_solution)
                     self.candidates.append(candidate)
-                else:
-                    i-=1 #aby iteracja nie poszła na marne
+
 
     def cross_genes(self,one,two):
         candidate=copy.deepcopy(one)
         for i in range(self.initial_solution.no_servers):
             if randrange(0,2) ==1 : # 50% szans
                 candidate.content_on_server[i]=copy.deepcopy(two.content_on_server[i])
-                candidate.assign_content_to_user(self.initial_solution)
-                candidate.calculate_total_cost(self.initial_solution)
+        candidate.assign_content_to_user(self.initial_solution)
+        candidate.calculate_total_cost(self.initial_solution)        
         return candidate
 
 
@@ -108,20 +127,21 @@ class Algorithm():
         no_servers=self.initial_solution.no_servers
         no_contents=self.initial_solution.no_contents
 
-        initial_contents_on_server=copy.deepcopy(self.initial_solution.content_on_server)
-        for k in range(self.starting_population):
+        
+        k=0
+        while k != self.starting_population:
+            initial_contents_on_server=copy.deepcopy(self.initial_solution.content_on_server)
             for i in range(no_servers):
                 for j in range(no_contents//2):
                     index_content=randrange(no_contents)
                     initial_contents_on_server[i][index_content]= not self.initial_solution.content_on_server[i][index_content]
-                candidate=Candidate("",self.initial_solution)
-                candidate.assign_solution(initial_contents_on_server)
-                if self.check_limits(candidate,self.initial_solution):
-                    candidate.assign_content_to_user(self.initial_solution)
-                    candidate.calculate_total_cost(self.initial_solution)
-                    candidates.append(candidate)
-                else:
-                    j-=1
+            candidate=Candidate("",self.initial_solution)
+            candidate.assign_solution(initial_contents_on_server)
+            if self.check_limits(candidate,self.initial_solution):
+                candidate.assign_content_to_user(self.initial_solution)
+                candidate.calculate_total_cost(self.initial_solution)
+                k+=1
+                candidates.append(candidate)
           
         return candidates
 
@@ -131,12 +151,13 @@ class Algorithm():
         self.no_generations+=1
 
     def check_new_solution(self):
-        if self.candidates[0].total_cost < self.cost:
+        if self.candidates[0].total_cost <= self.cost:
             self.cost=self.candidates[0].total_cost
             self.no_lack_better=0
         else:
             self.no_lack_better+=1
     def check_end_condition(self):
+        #print("CHECKING CONDITION...")
         if self.end_condition==Condition.TIME:
             if self.time_of_execution < self.LIMIT_TIME:
                 return True

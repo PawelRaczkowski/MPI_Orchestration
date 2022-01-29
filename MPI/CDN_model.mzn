@@ -24,7 +24,6 @@ array[USERS,CONTENTS] of bool: matrix_interest;
 %end of inputs
 %function
 function float: calculate(int:x1, int: y1,  int: x2,  int: y2) = sqrt(pow(x1-x2,2)+pow(y1-y2,2));
-
 function var float: cost()=sum(u in USERS,i in CONTENTS, j in SERVERS)(bool2int(content_on_server[i,j])*distances_orch_servers[j]*content_size[i]+bool2int(use_server[u,j,i])*5+bool2int(use_server[u,i,j])*content_size[i]*distances_user_server[u,j]) ;
 %helpful variables
 array[int] of float: distances_orch_servers= [sqrt(pow(x_server[i],2)+pow(y_server[i],2)) | i in SERVERS];
@@ -56,4 +55,5 @@ if sum(u in USERS)(bool2int(matrix_interest[u,j])) >0 then sum(i in SERVERS)(boo
 % rozwiąż- funkcja celu
 solve minimize cost();
 
-output [ "Contents on server: \(s) = \(content_on_server[CONTENTS, s]);\n" | s in SERVERS ]
+output [ "Contents on server: \(s) = \(content_on_server[CONTENTS, s]);\n" | s in SERVERS ];
+output [ "Cost of solution: ", show(sum(u in USERS,i in CONTENTS, j in SERVERS)(bool2int(content_on_server[i,j])*distances_orch_servers[j]*content_size[i]+bool2int(use_server[u,j,i])*5+bool2int(use_server[u,i,j])*content_size[i]*distances_user_server[u,j])), "\n" ];

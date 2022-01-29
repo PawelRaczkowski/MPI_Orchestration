@@ -49,7 +49,7 @@ class Candidate():
 
             self.content_on_server.append([])
             for j in range(self.no_contents):
-                self.content_on_server[i].append(False)
+                self.content_on_server[i].append(False) # content_on_server[i][j] na serwerze i jest treść j
         
 
 
@@ -89,7 +89,7 @@ class Candidate():
             line=f.readline().split(' ')
             for j in range(len(line)):
                 self.matrix_interest[i].append(self.str2bool(line[j]))
-
+            #print('matrix of interest ', self.matrix_interest)
         
         f.readline()
 
@@ -98,18 +98,18 @@ class Candidate():
             self.content_sizes.append(size)
 
     def str2bool(self, v):
-        return v.lower() in ["True", "true"]
+        return v.lower() in ["True", "true", "true\n"]
 
     def calculate_distance(self,x1,x2,y1,y2):
         return math.sqrt((x1-x2)**2+(y1-y2)**2)
 
-    def calculate_lack_of_demand_matrix(self,initial_solution):
+    def calculate_lack_of_demand_matrix(self,initial_solution,flag):
         cost=0
         for u in range(initial_solution.no_users):
             for j in range(initial_solution.no_contents):
                 if initial_solution.matrix_interest[u][j]:
                     if initial_solution.matrix_interest[u][j] not in self.use_server[u][j]:
-                        cost+=1000.0
+                        cost+=10000.0
         return cost
     def calculate_allocation_cost(self,initial_solution):
         cost=0
@@ -139,7 +139,7 @@ class Candidate():
         C_allocation=self.calculate_allocation_cost(initial_solution)
         C_users=self.calculate_users_cost(initial_solution)
         C_load_server=self.calculate_load_cost(initial_solution)
-        C_lack_matrix=self.calculate_lack_of_demand_matrix(initial_solution)
+        C_lack_matrix=self.calculate_lack_of_demand_matrix(initial_solution,flag=False)
 
         self.total_cost=C_allocation+C_users+C_load_server+C_lack_matrix
 
@@ -155,17 +155,23 @@ class Candidate():
         for u in range(initial_solution.no_users):
             for c in range(initial_solution.no_contents):
                 if initial_solution.matrix_interest[u][c]:
-                    server_to_assign=initial_solution.assign_server(u,c)
+                    server_to_assign=self.assign_server(u,c,initial_solution)
                     if server_to_assign!=-1:
-                        self.use_server[u,c,server_to_assign]=True
+                        self.use_server[u][c][server_to_assign]=True
+                    else:
+                        for i in range(initial_solution.no_servers):
+                            self.use_server[u][c][i]=False
+                else:
+                    for i in range(initial_solution.no_servers):
+                        self.use_server[u][c][i]=False
 
 
-    def assign_server(self,user,content):
+    def assign_server(self,user,content,initial_solution):
         distance=MAXINT
         server=-1
-        for i in range(self.no_servers):
+        for i in range(initial_solution.no_servers):
             if self.content_on_server[i][content]:
-                if self.distances_orch_servers[i][user] <= distance:
-                    distance=self.distances_orch_servers[i][user]
+                if initial_solution.distances_user_servers[i][user] <= distance:
+                    distance=initial_solution.distances_user_servers[i][user]
                     server=i
         return server

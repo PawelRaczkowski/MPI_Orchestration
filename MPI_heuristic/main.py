@@ -8,9 +8,13 @@ def main():
     if no_arguments != 2:
         print('Proper execution: python script <file_configuration.txt>')
     else:
+        print("START PROGRAM")
         conf_file=sys.argv[1]
+        print("CREATING INITIAL SOLUTION...")
         initial_solution=Candidate(conf_file,None)
-        algorithm=Algorithm(init_solution=initial_solution,end_condition=Condition.WITHOUT_BETTER_SOLUTION,p_cross=0.2,p_mutation=0.3,no_candidates=5,starting_population=10) 
+        print("CREATING ALGORITHM")
+        algorithm=Algorithm(init_solution=initial_solution,end_condition=Condition.TIME,p_cross=0.2,p_mutation=0.3,no_candidates=5,starting_population=10) 
+        print("RUN ALGORITHM...")       
         algorithm.run()
         algorithm.display_results()
 
