@@ -1,5 +1,5 @@
-3
-3
+5
+5
 5
 
 2 3
@@ -8,6 +8,10 @@
 16
 6 10
 18
+4 6
+8
+5 7
+6
 
 1 2
 true false false true false
@@ -15,9 +19,9 @@ true false false true false
 false true true false false
 2 -2
 true false false false true
+10 3
+false true true true true
+15 8
+true false false true true
 
-4
-3
-2
-3
-1
+4 3 2 6 5

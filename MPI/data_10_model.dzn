@@ -1,0 +1,19 @@
+no_servers=10;
+no_users=10;
+no_contents=10;
+capacity=[10,16,18,8,6,17,5,11,9,12];
+x_server=[2,12,6,4,5,15,14,7,8,9];
+y_server=[3,8,10,6,7,13,1,-2,-5,4];
+content_size=[4,3,2,6,5,8,1,9,6,3];
+x_user=[1,0,2,10,15,-2,-10,8,20,6];
+y_user=[2,-1,-2,3,8,-15,25,3,8,9];
+matrix_interest=[|true,false,false,true,false,false, true, true, false, false
+|false,true,true,false,false, true, false, false, true ,false
+|true,false,false,false,true, false, false, true, true, true
+|false, true, true, true, true, true, false, true, false, true
+|true, false, false, true, true, false, false, true, true, false
+|false, true, true, true, true, true, false, true, false, true
+|true, false, false, true, true, false, false, true, true, false
+|true, true, false, false, true, true, false, false, true, false
+|true,false,false,true,false,false, true, true, false, false
+|false, true, true, true, true, true, false, true, false, true|];

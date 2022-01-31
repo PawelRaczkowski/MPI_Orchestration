@@ -9,7 +9,7 @@ import copy
 class Algorithm():
     LIMIT_GENERATIONS=100
     LIMIT_TIME=10 # in seconds
-    LIMIT_LACK_BETTER_SOLUTION=20
+    LIMIT_LACK_BETTER_SOLUTION=100
 
     def __init__(self,init_solution,end_condition,p_cross,p_mutation,no_candidates,starting_population) -> None:
         self.initial_solution=init_solution # initial solution to kandydat referencyjny gdzie są wgrane dane z pliku
@@ -132,7 +132,6 @@ class Algorithm():
         while k != self.starting_population:
             initial_contents_on_server=copy.deepcopy(self.initial_solution.content_on_server)
             for i in range(no_servers):
-                for j in range(no_contents//2):
                     index_content=randrange(no_contents)
                     initial_contents_on_server[i][index_content]= not self.initial_solution.content_on_server[i][index_content]
             candidate=Candidate("",self.initial_solution)
@@ -151,7 +150,7 @@ class Algorithm():
         self.no_generations+=1
 
     def check_new_solution(self):
-        if self.candidates[0].total_cost <= self.cost:
+        if self.candidates[0].total_cost < self.cost:
             self.cost=self.candidates[0].total_cost
             self.no_lack_better=0
         else:
@@ -172,3 +171,4 @@ class Algorithm():
     def display_results(self):
         self.candidates[0].display_results(self.initial_solution)
         print('No generations: {}'.format(self.no_generations))
+        print('Time of execution: {}'.format(self.time_of_execution))

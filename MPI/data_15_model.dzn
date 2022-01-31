@@ -1,0 +1,24 @@
+no_servers=15;
+no_users=15;
+no_contents=15;
+capacity=[10,16,18,8,6,17,5,11,9,12,20,11,13,8,17];
+x_server=[2,12,6,4,5,15,14,7,8,9,15,-5,-11,-4,3];
+y_server=[3,8,10,6,7,13,1,-2,-5,4,13,8,9,21,-12];
+content_size=[4,3,2,6,5,8,1,9,6,3,12,10,9,8,5];
+x_user=[1,0,2,10,15,-2,-10,8,20,6,40,23,11,8,5];
+y_user=[2,-1,-2,3,8,-15,25,3,8,9,-10,5,7,17,18];
+matrix_interest=[|true,false,false,true,false,false, true, true, false, false, false, true, true, false, false
+|false,true,true,false,false, true, false, false, true ,false, true, true, false, false, false
+|true,false,false,false,true, false, false, true, true, true, true, false, true, false, true
+|false, true, true, true, true, true, false, true, false, true, false, false, false, true, true
+|true, false, false, true, true, false, false, true, true, false, false, true, true, false, false
+|false, true, true, true, true, true, false, true, false, true, true, false, true, true, false
+|true, false, false, true, true, false, false, true, true, false, false, false, true, true, false
+|true, true, false, false, true, true, false, false, true, false, false, true, true, false, false
+|true,false,false,true,false,false, true, true, false, false, true, true, true, false, true
+|false, true, true, true, true, true, false, true, false, true, true, false, true, true, false
+|true,false,false,false,true, false, false, true, true, true, false, false, true, true, true
+|true, false, false, true, true, false, false, true, true, false, false, true, true, false, false
+|true,false,false,true,false,false, true, true, false, false, true, false, false, false, true
+|true, false, false, true, true, false, false, true, true, false, false, false, true, true, false
+|true, true, false, false, true, true, false, false, true, false, true, false, true, true, false|];

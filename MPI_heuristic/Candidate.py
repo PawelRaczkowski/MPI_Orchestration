@@ -3,6 +3,7 @@ import copy
 from xmlrpc.client import MAXINT
 import math
 from location import Location
+import re
 class Candidate():
     def __init__(self,conf_file,initial_solution) -> None:
         self.no_servers=0
@@ -59,44 +60,41 @@ class Candidate():
     def parse_file(self,conf_file):
         f=open(conf_file, "r")
 
-        self.no_servers=int(f.readline(),16) ## number of objects
-        self.no_users=int(f.readline(),16)
-        self.no_contents=int(f.readline(),16)
-
+        self.no_servers=int(f.readline()) ## number of objects
+        self.no_users=int(f.readline())
+        self.no_contents=int(f.readline())
         f.readline()
 
         for i in range(self.no_servers):
             line=f.readline().split(' ') # SERVER LOCATIONS
-            x=int(line[0],16)
-            y=int(line[1],16)
+            x=int(line[0])
+            y=int(line[1])
             location=Location(x,y)
             self.servers_locations.append(location)
 
-            capacity=int(f.readline(),16) ## CAPACITIES
+            capacity=int(f.readline()) ## CAPACITIES
             self.capacities.append(capacity)
 
         f.readline()
 
         for i in range(self.no_users):
             line=f.readline().split(' ') # user locations
-            x=int(line[0],16)
-            y=int(line[1],16)
+            x=int(line[0])
+            y=int(line[1])
             location=Location(x,y)
             self.users_locations.append(location)
 
             self.matrix_interest.append([]) # matrix of interest
 
             line=f.readline().split(' ')
+            
             for j in range(len(line)):
                 self.matrix_interest[i].append(self.str2bool(line[j]))
-            #print('matrix of interest ', self.matrix_interest)
-        
+            
         f.readline()
-
-        for i in range(self.no_contents): # size of contents
-            size=int(f.readline(),16)
-            self.content_sizes.append(size)
-
+        line=f.readline().split(' ')
+        for j in range(len(line)):
+            self.content_sizes.append(int(line[j]))
     def str2bool(self, v):
         return v.lower() in ["True", "true", "true\n"]
 
@@ -109,7 +107,7 @@ class Candidate():
             for j in range(initial_solution.no_contents):
                 if initial_solution.matrix_interest[u][j]:
                     if initial_solution.matrix_interest[u][j] not in self.use_server[u][j]:
-                        cost+=10000.0
+                        cost+=100000.0
         return cost
     def calculate_allocation_cost(self,initial_solution):
         cost=0
