@@ -132,6 +132,7 @@ class Algorithm():
         while k != self.starting_population:
             initial_contents_on_server=copy.deepcopy(self.initial_solution.content_on_server)
             for i in range(no_servers):
+                for j in range(no_contents//3):
                     index_content=randrange(no_contents)
                     initial_contents_on_server[i][index_content]= not self.initial_solution.content_on_server[i][index_content]
             candidate=Candidate("",self.initial_solution)

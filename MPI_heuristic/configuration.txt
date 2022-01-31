@@ -9,9 +9,9 @@
 6 10
 18
 4 6
-8
+18
 5 7
-6
+16
 
 1 2
 true false false true false

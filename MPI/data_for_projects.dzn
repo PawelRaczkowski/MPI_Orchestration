@@ -1,7 +1,7 @@
 no_servers=5;
 no_users=5;
 no_contents=5;
-capacity=[10,16,18,8,6];
+capacity=[10,16,18,18,16];
 x_server=[2,12,6,4,5];
 y_server=[3,8,10,6,7];
 content_size=[4,3,2,6,5];
